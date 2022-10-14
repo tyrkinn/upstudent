@@ -1,0 +1,80 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  password  String
+  firstname String?
+  lastname  String?
+  role Role
+  createdQuizes Quiz[]
+  createdLinks QuizLink[]
+  // resultHistory QuizResult[]
+}
+
+model Quiz {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  questions Question[]
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
+  paticipatedLinks QuizLink[]
+}
+
+model Question {
+  id String @id @default(cuid())
+  text String
+  quiz Quiz @relation(fields: [quizId], references: [id])
+  quizId String
+  answers Answer[]
+  validAnswerId String
+}
+
+model Answer {
+  id String @id @default(cuid())
+  text String
+  valid Boolean
+  question Question @relation(fields: [questionId], references: [id])
+  questionId String
+}
+
+model QuizLink {
+  id String @id @default(cuid())
+  link String
+  quiz Quiz @relation(fields: [quizId], references: [id])
+  quizId String
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
+  // results QuizResult[]
+}
+
+// TODO: Доаилить QuizResult
+
+// model QuizResult {
+//   id String @id @default(cuid())
+//   quizLink QuizLink @relation(fields: [quizLinkId], references: [id])
+//   quizLinkId String
+//   participant User @relation(fields: [participantId], references: [id])
+//   participantId String
+//   points Int
+// }
+
+
+enum Role {
+  TEACHER
+  STUDENT
+}
