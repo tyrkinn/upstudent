@@ -32,6 +32,7 @@ Table Question {
   quiz Quiz [not null]
   quizId String [not null]
   answers Answer [not null]
+  validAnswerId String [not null]
 }
 
 Table Answer {
