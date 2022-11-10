@@ -4,26 +4,21 @@
 
 Table User {
   id String [pk]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
   email String [unique, not null]
   password String [not null]
-  firstname String
-  lastname String
-  role Role [not null]
+  firstname String [not null]
+  lastname String [not null]
   createdQuizes Quiz [not null]
-  createdLinks QuizLink [not null]
   resultHistory QuizResult [not null]
 }
 
 Table Quiz {
   id String [pk]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
+  title String [not null]
   questions Question [not null]
   author User [not null]
   authorId String [not null]
-  paticipatedLinks QuizLink [not null]
+  results QuizResult [not null]
 }
 
 Table Question {
@@ -32,39 +27,23 @@ Table Question {
   quiz Quiz [not null]
   quizId String [not null]
   answers Answer [not null]
-  validAnswerId String [not null]
 }
 
 Table Answer {
   id String [pk]
   text String [not null]
-  valid Boolean [not null]
+  valid Boolean [not null, default: false]
   question Question [not null]
   questionId String [not null]
 }
 
-Table QuizLink {
-  id String [pk]
-  link String [not null]
-  quiz Quiz [not null]
-  quizId String [not null]
-  author User [not null]
-  authorId String [not null]
-  results QuizResult [not null]
-}
-
 Table QuizResult {
   id String [pk]
-  quizLink QuizLink [not null]
-  quizLinkId String [not null]
+  quiz Quiz [not null]
+  quizId String [not null]
   participant User [not null]
   participantId String [not null]
   points Int [not null]
-}
-
-Enum Role {
-  TEACHER
-  STUDENT
 }
 
 Ref: Quiz.authorId > User.id
@@ -73,10 +52,6 @@ Ref: Question.quizId > Quiz.id
 
 Ref: Answer.questionId > Question.id
 
-Ref: QuizLink.quizId > Quiz.id
-
-Ref: QuizLink.authorId > User.id
-
-Ref: QuizResult.quizLinkId > QuizLink.id
+Ref: QuizResult.quizId > Quiz.id
 
 Ref: QuizResult.participantId > User.id

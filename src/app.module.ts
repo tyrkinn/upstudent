@@ -9,6 +9,10 @@ import config from 'src/common/configs/config';
 import { loggingMiddleware } from 'src/common/middleware/logging.middleware';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
+import { QuizModule } from './quiz/quiz.module';
+import { QuestionModule } from './question/question.module';
+import { QuizResultModule } from './quiz-result/quiz-result.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -27,6 +31,10 @@ import { GqlConfigService } from './gql-config.service';
 
     AuthModule,
     UsersModule,
+    QuizModule,
+    QuestionModule,
+    QuizResultModule,
+    AnswerModule,
   ],
   providers: [AppResolver],
 })

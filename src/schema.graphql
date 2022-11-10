@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Answer {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  id: ID!
+  text: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  valid: Boolean!
+}
+
 type Auth {
   """JWT access token"""
   accessToken: JWT!
@@ -16,15 +27,69 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
+input CheckAuthorInput {
+  quizId: String!
+}
+
+type CheckAuthorResult {
+  isAuthor: Boolean!
+}
+
+input CreateAnswerInput {
+  text: String!
+  valid: Boolean!
+}
+
+input CreateQuestionInput {
+  answers: [CreateAnswerInput!]!
+  quizId: String!
+  text: String!
+}
+
+input CreateQuizInput {
+  title: String!
+}
+
+input CreateQuizResultInput {
+  answerIds: [String!]!
+  quizId: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+input IsValidInput {
+  id: String!
+}
+
+type IsValidResult {
+  isValid: Boolean!
+}
+
 """
 A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction.
 """
 scalar JWT
+
+type ListQuizResults {
+  id: String!
+  points: Int!
+  total: Int!
+  userFullName: String!
+}
+
+input ListQuizResultsInput {
+  quizId: String!
+}
+
+type ListUserResultsOutput {
+  id: String!
+  points: Int!
+  quizTitle: String!
+  total: Int!
+}
 
 input LoginInput {
   email: String!
@@ -33,28 +98,75 @@ input LoginInput {
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
+  createQuestion(data: CreateQuestionInput!): Question!
+  createQuiz(data: CreateQuizInput!): Quiz!
+  createQuizResult(data: CreateQuizResultInput!): QuizResult!
   login(data: LoginInput!): Auth!
   refreshToken(token: JWT!): Token!
+  removeAnswer(id: String!): Answer!
+  removeQuestion(id: String!): Question!
+  removeQuiz(id: String!): Quiz!
   signup(data: SignupInput!): Auth!
+  updateAnswer(data: UpdateAnswerInput!): Answer!
+  updateQuiz(data: UpdateQuizInput!): Quiz!
+  updateText(updateQuestionInput: UpdateQuestionInput!): Question!
   updateUser(data: UpdateUserInput!): User!
 }
 
 type Query {
+  checkAuthor(data: CheckAuthorInput!): CheckAuthorResult!
   hello(name: String!): String!
   helloWorld: String!
-  me: User!
+  isValid(data: IsValidInput!): IsValidResult!
+  listCreated: [Quiz!]!
+  listQuizResults(data: ListQuizResultsInput!): [ListQuizResults!]!
+  listUserResults: [ListUserResultsOutput!]!
+  question(id: String!): Question!
+  quiz(id: String!): Quiz!
 }
 
-"""User role"""
-enum Role {
-  STUDENT
-  TEACHER
+type Question {
+  answers: [Answer!]!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  id: ID!
+  text: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type Quiz {
+  author: User!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  id: ID!
+  questions: [Question!]!
+  results: [QuizResult!]!
+  title: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type QuizResult {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  id: ID!
+  points: Int!
+  quiz: Quiz!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
 }
 
 input SignupInput {
   email: String!
-  firstname: String
-  lastname: String
+  firstname: String!
+  lastname: String!
   password: String!
 }
 
@@ -66,6 +178,22 @@ type Token {
   refreshToken: JWT!
 }
 
+input UpdateAnswerInput {
+  id: String!
+  text: String
+  valid: Boolean
+}
+
+input UpdateQuestionInput {
+  id: String!
+  text: String
+}
+
+input UpdateQuizInput {
+  id: String!
+  title: String
+}
+
 input UpdateUserInput {
   firstname: String
   lastname: String
@@ -74,11 +202,12 @@ input UpdateUserInput {
 type User {
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
+  createdQuizes: [Quiz!]!
   email: String!
   firstname: String
   id: ID!
   lastname: String
-  role: Role!
+  results: [QuizResult!]!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!

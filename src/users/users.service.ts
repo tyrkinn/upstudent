@@ -20,6 +20,12 @@ export class UsersService {
     });
   }
 
+  async listCreated(userId: string) {
+    return await this.prisma.user
+      .findFirst({ where: { id: userId } })
+      .createdQuizes();
+  }
+
   async changePassword(
     userId: string,
     userPassword: string,

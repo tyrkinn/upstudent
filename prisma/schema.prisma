@@ -1,6 +1,6 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = "mongodb+srv://prisma:admin@cluster0.vnpktz8.mongodb.net/upstudent?retryWrites=true&w=majority"
 }
 
 generator client {
@@ -12,30 +12,26 @@ generator dbml {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
   email         String       @unique
   password      String
   firstname     String
   lastname      String
   createdQuizes Quiz[]
-  createdLinks  QuizLink[]
   resultHistory QuizResult[]
 }
 
 model Quiz {
-  id               String     @id @default(cuid())
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  questions        Question[]
-  author           User       @relation(fields: [authorId], references: [id])
-  authorId         String
-  paticipatedLinks QuizLink[]
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  questions Question[]
+  author    User         @relation(fields: [authorId], references: [id])
+  authorId  String
+  results   QuizResult[]
 }
 
 model Question {
-  id      String   @id @default(cuid())
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
   text    String
   quiz    Quiz     @relation(fields: [quizId], references: [id])
   quizId  String
@@ -43,28 +39,18 @@ model Question {
 }
 
 model Answer {
-  id         String   @id @default(cuid())
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   text       String
   valid      Boolean  @default(false)
   question   Question @relation(fields: [questionId], references: [id])
   questionId String
 }
 
-model QuizLink {
-  id       String       @id @default(cuid())
-  link     String
-  quiz     Quiz         @relation(fields: [quizId], references: [id])
-  quizId   String
-  author   User         @relation(fields: [authorId], references: [id])
-  authorId String
-  results  QuizResult[]
-}
-
 model QuizResult {
-  id            String   @id @default(cuid())
-  quizLink      QuizLink @relation(fields: [quizLinkId], references: [id])
-  quizLinkId    String
-  participant   User     @relation(fields: [participantId], references: [id])
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  quiz          Quiz   @relation(fields: [quizId], references: [id])
+  quizId        String
+  participant   User   @relation(fields: [participantId], references: [id])
   participantId String
   points        Int
 }
