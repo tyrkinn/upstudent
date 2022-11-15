@@ -20,7 +20,7 @@ export class QuizResolver {
     return this.quizService.create(input.title, user.id);
   }
 
-  @Query(() => [Quiz], { name: 'quiz' })
+  @Query(() => [Quiz], { name: 'allQuizes' })
   findAll() {
     return this.quizService.findAll();
   }

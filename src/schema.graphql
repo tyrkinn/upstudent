@@ -114,6 +114,7 @@ type Mutation {
 }
 
 type Query {
+  allQuizes: [Quiz!]!
   checkAuthor(data: CheckAuthorInput!): CheckAuthorResult!
   hello(name: String!): String!
   helloWorld: String!
@@ -121,6 +122,7 @@ type Query {
   listCreated: [Quiz!]!
   listQuizResults(data: ListQuizResultsInput!): [ListQuizResults!]!
   listUserResults: [ListUserResultsOutput!]!
+  me: User!
   question(id: String!): Question!
   quiz(id: String!): Quiz!
 }

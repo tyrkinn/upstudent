@@ -9,12 +9,13 @@ export class QuizService {
   async create(title: string, userId: string) {
     const newQuiz = this.prisma.quiz.create({
       data: { title: title, authorId: userId },
+      include: { author: true },
     });
     return await newQuiz;
   }
 
   async findAll() {
-    return await this.prisma.quiz.findMany();
+    return await this.prisma.quiz.findMany({ include: { author: true } });
   }
 
   async findOne(id: string) {

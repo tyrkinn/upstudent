@@ -40,4 +40,10 @@ export class UsersResolver {
       changePassword
     );
   }
+
+  @UseGuards(GqlAuthGuard)
+  @Query(() => User)
+  async me(@UserEntity() user: User) {
+    return user;
+  }
 }
