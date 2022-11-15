@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Answer } from 'src/answer/models/answer.model';
 import { CreateFullQuizInput } from './dto/create-full-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
 
@@ -25,6 +24,11 @@ export class QuizService {
       where: { id: id },
       include: {
         author: true,
+        questions: {
+          include: {
+            answers: true,
+          },
+        },
       },
     });
     return await quiz;

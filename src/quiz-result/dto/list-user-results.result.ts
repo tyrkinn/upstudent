@@ -9,6 +9,9 @@ export class ListUserResultsOutput {
   quizTitle: string;
 
   @Field()
+  quizId: string;
+
+  @Field()
   total: number;
 
   @Field()

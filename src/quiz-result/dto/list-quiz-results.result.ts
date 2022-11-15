@@ -13,4 +13,7 @@ export class ListQuizResults {
 
   @Field()
   points: number;
+
+  @Field()
+  quizTitle: string;
 }

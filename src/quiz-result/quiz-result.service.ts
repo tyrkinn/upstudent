@@ -59,6 +59,7 @@ export class QuizResultService {
 
     const { results } = quiz;
     return results.flatMap((r) => ({
+      quizTitle: quiz.title,
       id: r.id,
       userFullName: r.participant.firstname + ' ' + r.participant.lastname,
       total: quiz.questions.flatMap((q) => q.answers).filter((a) => a.valid)
@@ -86,6 +87,7 @@ export class QuizResultService {
     return results.flatMap((r) => ({
       id: r.id,
       quizTitle: r.quiz.title,
+      quizId: r.quiz.id,
       total: r.quiz.questions.flatMap((q) => q.answers).filter((a) => a.valid)
         .length,
       points: r.points,

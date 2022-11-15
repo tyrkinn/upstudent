@@ -76,6 +76,7 @@ scalar JWT
 type ListQuizResults {
   id: String!
   points: Int!
+  quizTitle: String!
   total: Int!
   userFullName: String!
 }
@@ -87,6 +88,7 @@ input ListQuizResultsInput {
 type ListUserResultsOutput {
   id: String!
   points: Int!
+  quizId: String!
   quizTitle: String!
   total: Int!
 }
