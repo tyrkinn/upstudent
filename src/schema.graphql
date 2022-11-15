@@ -3,13 +3,13 @@
 # ------------------------------------------------------
 
 type Answer {
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
   id: ID!
   text: String!
+  valid: Boolean!
+}
 
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+input AnswersForQuizCreation {
+  text: String!
   valid: Boolean!
 }
 
@@ -40,6 +40,11 @@ input CreateAnswerInput {
   valid: Boolean!
 }
 
+input CreateFullQuizInput {
+  questions: [QuestionForQuizCreation!]!
+  title: String!
+}
+
 input CreateQuestionInput {
   answers: [CreateAnswerInput!]!
   quizId: String!
@@ -54,11 +59,6 @@ input CreateQuizResultInput {
   answerIds: [String!]!
   quizId: String!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input IsValidInput {
   id: String!
@@ -98,6 +98,7 @@ input LoginInput {
 
 type Mutation {
   changePassword(data: ChangePasswordInput!): User!
+  createFullQuiz(data: CreateFullQuizInput!): Quiz!
   createQuestion(data: CreateQuestionInput!): Question!
   createQuiz(data: CreateQuizInput!): Quiz!
   createQuizResult(data: CreateQuizResultInput!): QuizResult!
@@ -129,39 +130,27 @@ type Query {
 
 type Question {
   answers: [Answer!]!
-
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
   id: ID!
   text: String!
+}
 
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
+input QuestionForQuizCreation {
+  answers: [AnswersForQuizCreation!]!
+  text: String!
 }
 
 type Quiz {
   author: User!
-
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
   id: ID!
   questions: [Question!]!
   results: [QuizResult!]!
   title: String!
-
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
 }
 
 type QuizResult {
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
   id: ID!
   points: Int!
   quiz: Quiz!
-
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
   user: User!
 }
 
@@ -202,15 +191,10 @@ input UpdateUserInput {
 }
 
 type User {
-  """Identifies the date and time when the object was created."""
-  createdAt: DateTime!
   createdQuizes: [Quiz!]!
   email: String!
   firstname: String
   id: ID!
   lastname: String
   results: [QuizResult!]!
-
-  """Identifies the date and time when the object was last updated."""
-  updatedAt: DateTime!
 }

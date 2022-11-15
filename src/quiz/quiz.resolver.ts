@@ -9,6 +9,7 @@ import { UserEntity } from 'src/common/decorators/user.decorator';
 import { User } from 'src/users/models/user.model';
 import { CheckAuthorResult } from './dto/check-author.result';
 import { CheckAuthorInput } from './dto/check-author.input';
+import { CreateFullQuizInput } from './dto/create-full-quiz.input';
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => Quiz)
@@ -38,6 +39,14 @@ export class QuizResolver {
   @Mutation(() => Quiz)
   removeQuiz(@Args('id', { type: () => String }) id: string) {
     return this.quizService.remove(id);
+  }
+
+  @Mutation(() => Quiz)
+  createFullQuiz(
+    @UserEntity() user: User,
+    @Args('data') createFullQuizInput: CreateFullQuizInput
+  ) {
+    return this.quizService.createFullQuiz(createFullQuizInput, user.id);
   }
 
   @Query(() => CheckAuthorResult)
